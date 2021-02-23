@@ -33,3 +33,13 @@ services:
     restart: always
     ports:
       - 6379:6379
+  neo4j:
+    image: neo4j:4.2.3
+    restart: always
+    environment:
+      NEO4J_AUTH: neo4j/s3cr3t
+    ports:
+    - 7474:7474
+    - 7687:7687
+    volumes:
+      - .data/neo4j:/data
