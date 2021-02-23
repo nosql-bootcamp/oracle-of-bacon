@@ -1,0 +1,35 @@
+version: '3'
+services:
+  elasticsearch:
+    hostname: 'elasticsearch'
+    environment:
+      discovery.type: single-node
+    image: elasticsearch:7.10.1
+    restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - .data/elastic:/usr/share/elasticsearch/data
+  kibana:
+    image: kibana:7.10.1
+    restart: always
+    ports:
+      - 5601:5601
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+    - 27017:27017
+    volumes:
+      - .data/mongo:/data/db
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8888:8081
+  redis:
+    image: redis:6.2.0
+    restart: always
+    ports:
+      - 6379:6379
