@@ -1,8 +1,8 @@
 package com.serli.oracle.of.bacon.repository;
 
-import redis.clients.jedis.Jedis;
-
 import java.util.List;
+
+import redis.clients.jedis.Jedis;
 
 public class RedisRepository {
     private final Jedis jedis;
@@ -12,14 +12,7 @@ public class RedisRepository {
     }
 
     public List<String> getLastTenSearches() {
-        List<String> top10 = jedis.lrange("last10", 0, 9);
-        return top10;
-    }
-
-    public void saveSearch(String actorName){
-        if(!getLastTenSearches().contains(actorName)) {
-            jedis.lpush("last10", actorName);
-            jedis.ltrim("last10", 0, 9);
-        }
+        // TODO implement last 10 searchs
+        return null;
     }
 }

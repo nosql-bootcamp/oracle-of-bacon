@@ -1,22 +1,11 @@
 package com.serli.oracle.of.bacon.repository;
 
-
-
-
-import static java.util.stream.Stream.concat;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
-import org.neo4j.driver.Result;
-import org.neo4j.driver.Session;
-import org.neo4j.driver.internal.InternalPath;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
 
@@ -28,28 +17,8 @@ public class Neo4JRepository {
     }
 
     public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
-        Session session = driver.session();
-
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("actorName", actorName);
-        Result result = session.run("MATCH(bacon:Actor{name:\"Bacon, Kevin (I)\"}), (actor:Actor{name:$actorName}),\n" +
-                "shortestPath = shortestPath((bacon)-[:PLAYED_IN*]-(actor))\n" +
-                "return shortestPath;", parameters);
-
-        return result.list(record -> (InternalPath) record.asMap().get("shortestPath"))
-                .stream()
-                .flatMap(internalPath ->
-                        concat(
-                                StreamSupport.stream(internalPath.nodes().spliterator(), true).map(node -> mapNodeToGrapNode(node)),
-                                StreamSupport.stream(internalPath.relationships().spliterator(), true).map(relationship -> mapRelationShipToNodeEdge(relationship))
-                        ))
-                .distinct()
-                .map((graphItem) -> {
-                    Map<String, GraphItem> dataMap = new HashMap<>();
-                    dataMap.put("data", graphItem);
-                    return dataMap;
-                })
-                .collect(Collectors.toList());
+        // TODO implement Oracle of Bacon
+        return null;
     }
 
     private GraphEdge mapRelationShipToNodeEdge(Relationship relationship) {
