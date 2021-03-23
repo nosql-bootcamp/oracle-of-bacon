@@ -12,7 +12,14 @@ public class RedisRepository {
     }
 
     public List<String> getLastTenSearches() {
-        // TODO implement last 10 searchs
-        return null;
+        List<String> top10 = jedis.lrange("last10", 0, 9);
+        return top10;
+    }
+
+    public void saveSearch(String actorName){
+        if(!getLastTenSearches().contains(actorName)) {
+            jedis.lpush("last10", actorName);
+            jedis.ltrim("last10", 0, 9);
+        }
     }
 }

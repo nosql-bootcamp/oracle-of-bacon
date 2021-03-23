@@ -1,7 +1,7 @@
-version: '3'
+version: "3"
 services:
   elasticsearch:
-    hostname: 'elasticsearch'
+    hostname: "elasticsearch"
     environment:
       discovery.type: single-node
     image: elasticsearch:7.10.1
@@ -20,7 +20,7 @@ services:
     image: mongo
     restart: always
     ports:
-    - 27017:27017
+      - 27017:27017
     volumes:
       - .data/mongo:/data/db
   mongo-express:
@@ -37,9 +37,9 @@ services:
     image: neo4j:4.2.3
     restart: always
     environment:
-      NEO4J_AUTH: neo4j/s3cr3t
+      NEO4J_AUTH: neo4j/password
     ports:
-    - 7474:7474
-    - 7687:7687
+      - 7474:7474
+      - 7687:7687
     volumes:
-      - .data/neo4j:/data
+      - /Users/77199m/projects/mines/neo4j-community-4.2.4/data/:/data
