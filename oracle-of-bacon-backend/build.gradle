@@ -1,0 +1,22 @@
+// Apply the java plugin to add support for Java
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility='1.8'
+
+mainClassName = "com.serli.oracle.of.bacon.Application"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.30'
+    compile 'net.code-story:http:2.105'
+    compile 'org.neo4j.driver:neo4j-java-driver:4.2.1'
+    compile 'io.searchbox:jest:6.3.1'
+    compile 'redis.clients:jedis:3.5.1'
+    compile 'org.mongodb:mongodb-driver:3.12.8'
+    compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.11.1'
+    testCompile 'junit:junit:4.12'
+}
