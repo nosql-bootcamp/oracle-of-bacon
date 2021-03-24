@@ -68,3 +68,6 @@ L'évaluation de votre travail sera effectuée selon les critères suivants :
 La livraison de votre travail s'effectue à l'aide d'une pull-request sur le repository https://github.com/nosql-bootcamp/oracle-of-bacon.
 
 **Vous devez commencer par forker le repository https://github.com/nosql-bootcamp/oracle-of-bacon**
+
+
+**Le rendu est à effectuer sous forme de pull request sur ce repository**
