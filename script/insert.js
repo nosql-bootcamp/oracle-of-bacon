@@ -5,7 +5,9 @@ const { Client } = require("@elastic/elasticsearch");
 const client = new Client({ node: "http://localhost:9200" });
 
 async function insert() {
-  // TODO créer l'index (et plus pour la ré-exécution ?)
+  client.indices.create({ index: 'imdb' }, (err, resp) => {
+    if (err) console.trace(err.message);
+  });
 
   let actors = [];
   let first = true;
@@ -13,11 +15,15 @@ async function insert() {
     .pipe(csv())
     // Pour chaque ligne on créé un document JSON pour l'acteur correspondant
     .on("data", async ({ name }) => {
-      // TODO ajouter les acteurs au tableau
+      actors.push(name);
     })
     // A la fin on créé l'ensemble des acteurs dans ElasticSearch
     .on("end", () => {
-      // TODO insérer dans elastic (les fonctions ci-dessous peuvent vous aider)
+      client.bulk(createBulkInsertQuery(actors), (err, resp) => {
+        if (err) console.trace(err.message);
+        else console.log(`Inserted ${resp.body.items.length} actors`);
+        client.close();
+      });
     });
 }
 
@@ -35,7 +41,7 @@ function recBulk(client, bulks) {
 }
 
 function createBulkInsertQueries(names, length) {
-  // TODO
+  const body = names.flatMap((name) => [{ index: { _index: INDEX_NAME, _type: '_doc' } }, name]);
 }
 
 // Fonction utilitaire permettant de formatter les données pour l'insertion "bulk" dans elastic
