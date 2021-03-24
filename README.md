@@ -41,7 +41,7 @@ cd oracle-of-bacon-backend
 ./gradlew run
 ```
 
-Rendez-vous sur a page http://localhost:8080.
+Rendez-vous sur a page http://localhost:3000.
 
 Pour la suite du projet, nous vous conseillons d'importer le backend dans votre IDE/éditeur préféré. Sauf désir de créativité :smiley:, vous n'avez rien à faire dans le front-end.
 
@@ -68,3 +68,6 @@ L'évaluation de votre travail sera effectuée selon les critères suivants :
 La livraison de votre travail s'effectue à l'aide d'une pull-request sur le repository https://github.com/nosql-bootcamp/oracle-of-bacon.
 
 **Vous devez commencer par forker le repository https://github.com/nosql-bootcamp/oracle-of-bacon**
+
+
+**Le rendu est à effectuer sous forme de pull request sur ce repository**
