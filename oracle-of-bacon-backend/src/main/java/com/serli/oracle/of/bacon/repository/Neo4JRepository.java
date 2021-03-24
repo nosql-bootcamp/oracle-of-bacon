@@ -21,18 +21,18 @@ public class Neo4JRepository {
         Session session = driver.session();
 
         // TODO
-        Result result = session.writeTransaction( new TransactionWork<String>()
-            {
-                @Override
-                public String execute( Transaction tx )
-                {
-                    Result result = tx.run( "MATCH p= " +
-                                                     "(bacon:Person {name:\"Kevin Bacon\"})-[*]-(actor:Person {name:\""+
-                                                     actorName+"\"}) " + "RETURN p");
-                    return result;
-                }
-            } );
-        System.out.println( result );
+        // Result result = session.writeTransaction( new TransactionWork<String>()
+        //     {
+        //         @Override
+        //         public String execute( Transaction tx )
+        //         {
+        //             Result result = tx.run( "MATCH p= " +
+        //                                              "(bacon:Person {name:\"Bacon, Kevin (I)\"})-[*]-(actor:Person {name:\""+
+        //                                              actorName+"\"}) " + "RETURN p");
+        //             return result;
+        //         }
+        //     } );
+        // System.out.println( result );
         /* Le plus court chemin :
         MATCH p=shortestPath(
           (bacon:Person {name:"Kevin Bacon"})-[*]-(actor:Person {name:"Al Pacino"})
