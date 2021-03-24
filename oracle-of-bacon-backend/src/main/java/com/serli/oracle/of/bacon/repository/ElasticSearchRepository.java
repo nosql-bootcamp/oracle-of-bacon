@@ -25,7 +25,7 @@ public class ElasticSearchRepository {
     }
 
     public List<String> getActorsSuggests(String searchQuery) throws IOException {
-        // TODO
+        //return client.searchQuery(searchQuery);
         return null;
     }
 }

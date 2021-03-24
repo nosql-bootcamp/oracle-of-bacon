@@ -19,8 +19,15 @@ public class Neo4JRepository {
 
     public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
+        
+        //Result result = session.run(
+        //            "MATCH (bacon)-[:PLAYED_IN]->(movie)<-[:PLAYED_IN]-(co_actor)
+        //            WHERE bacon.name=~'Bacon, Kevin.*' AND co_actor.name=$x
+        //            RETURN movie.title",
+        //            parameters("x", actorName));
+        
+        //return result;
 
-        // TODO
         return null;
     }
 

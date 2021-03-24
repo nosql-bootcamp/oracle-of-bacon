@@ -3,6 +3,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 mainClassName = "com.serli.oracle.of.bacon.Application"
+//mainClassName = "com.serli.oracle.of.bacon.loader.elasticsearch.CompletionLoader"
 
 repositories {
     jcenter()

@@ -16,14 +16,14 @@ public class CompletionLoader {
     public static void main(String[] args) throws IOException, InterruptedException {
         RestHighLevelClient client = ElasticSearchRepository.createClient();
 
-        if (args.length != 1) {
-            System.err.println("Expecting 1 arguments, actual : " + args.length);
-            System.err.println("Usage : completion-loader <actors file path>");
-            System.exit(-1);
-        }
+        //if (args.length != 1) {
+        //    System.err.println("Expecting 1 arguments, actual : " + args.length);
+        //    System.err.println("Usage : completion-loader <actors file path>");
+        //    System.exit(-1);
+        //}
 
 
-        String inputFilePath = args[0];
+        String inputFilePath = "C:\\Users\\mbrat\\Documents\\Cours IMT\\S4\\Data\\imdb-data\\actors.csv";
         try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(inputFilePath))) {
             bufferedReader
                     .lines()
