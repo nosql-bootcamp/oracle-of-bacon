@@ -11,3 +11,7 @@ To build :
 ```
 
 To Run, execute class *com.serli.oracle.of.bacon.Application*.
+
+neo4j-admin import --database=neo4j --nodes=..\..\Data\movies.csv --nodes=..\..\Data\actors.csv --relationships=..\..\Data\roles.csv
+
+On a eu beaucoup de problèmes sur l'import de la partie neo4j qui nous a empecher de continuer.
