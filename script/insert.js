@@ -9,7 +9,7 @@ async function insert() {
 
   let actors = [];
   let first = true;
-  fs.createReadStream("./imdb-data/actors.csv")
+  fs.createReadStream("../imdb-data/actors.csv")
     .pipe(csv())
     // Pour chaque ligne on créé un document JSON pour l'acteur correspondant
     .on("data", async ({ name }) => {

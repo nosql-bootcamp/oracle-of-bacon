@@ -67,6 +67,7 @@ public class APIEndPoint {
 
     @Get("suggest?q=:searchQuery")
     public List<String> getActorSuggestion(String searchQuery) throws IOException {
+        redisRepository.addSearch(searchQuery);
         return Arrays.asList("Niro, Chel",
                 "Senanayake, Niro",
                 "Niro, Juan Carlos",
