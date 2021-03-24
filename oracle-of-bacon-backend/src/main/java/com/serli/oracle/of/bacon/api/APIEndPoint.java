@@ -25,6 +25,7 @@ public class APIEndPoint {
     // TODO change return type
     public String getConnectionsToKevinBacon(String actorName) {
         this.redisRepository.saveSearch(actorName);
+        this.neo4JRepository.getConnectionsToKevinBacon(actorName);
         return "[\n" +
                 "{\n" +
                 "\"data\": {\n" +
