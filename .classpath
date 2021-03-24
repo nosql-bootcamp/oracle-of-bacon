@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="oracle-of-bacon-backend/src/main/java"/>
+	<classpathentry kind="lib" path="oracle-of-bacon-backend/gradle/wrapper/gradle-wrapper.jar"/>
+	<classpathentry kind="output" path="oracle-of-bacon-backend/build/classes/java/main"/>
+</classpath>
