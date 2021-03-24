@@ -17,7 +17,7 @@ public class RedisRepository {
 
     public void addLastSearch(String search){
         
-        if (!this.jedis.lrange("LastTenSearches", 0, 2).contains(search)){
+        if (!this.jedis.lrange("LastTenSearches", 0, 9).contains(search)){
             this.jedis.lpush("LastTenSearches", search);
         }
         
