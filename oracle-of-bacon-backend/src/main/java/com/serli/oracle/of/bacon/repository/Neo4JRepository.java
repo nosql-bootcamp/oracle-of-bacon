@@ -18,9 +18,7 @@ public class Neo4JRepository {
     }
 
     public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
-        Session session = driver.session();
-
-        // TODO
+        
         return null;
     }
 
