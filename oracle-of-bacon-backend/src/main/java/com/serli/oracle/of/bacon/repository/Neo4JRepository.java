@@ -1,14 +1,15 @@
 package com.serli.oracle.of.bacon.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.neo4j.driver.AuthTokens;
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.GraphDatabase;
-import org.neo4j.driver.Session;
+import org.neo4j.driver.*;
 import org.neo4j.driver.types.Node;
+import org.neo4j.driver.types.Path;
 import org.neo4j.driver.types.Relationship;
+
+import static org.neo4j.driver.Values.parameters;
 
 public class Neo4JRepository {
     private final Driver driver;
@@ -17,11 +18,36 @@ public class Neo4JRepository {
         this.driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "password"));
     }
 
-    public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
-        Session session = driver.session();
+    public List<GraphItem> getConnections(String actorName) {
+        List<GraphItem> res = new ArrayList<>();
 
-        // TODO
-        return null;
+        try (Session session = driver.session()) {
+            String query = "match p=(n:Actor)-[*]-(o:Movie) where  n.name=$actorName return p";
+            Result result = session.run(query, parameters("actorName", actorName));
+            while (result.hasNext()) {
+                Record x = result.next();
+                Path p = x.get(0).asPath();
+                for (Node n : p.nodes()) {
+                    GraphNode darkVaderNode = mapNodeToGrapNode(n);
+                    res.add(darkVaderNode);
+                }
+                for (Relationship r : p.relationships()) {
+                    GraphEdge darkVaderRel = mapRelationShipToNodeEdge(r);
+                    res.add(darkVaderRel);
+                }
+            }
+        }
+        return res;
+    }
+
+    public String connectionsToJson(List<GraphItem> res) {
+        String json = "[";
+        for (int i = 0; i < res.size(); i++) {
+            if (i != 0) json += ",";
+            json += res.get(i).toString();
+        }
+        json += "]";
+        return json;
     }
 
     private GraphEdge mapRelationShipToNodeEdge(Relationship relationship) {
@@ -72,6 +98,17 @@ public class Neo4JRepository {
             this.value = value;
             this.type = type;
         }
+
+        @Override
+        public String toString() {
+            return "{\n" +
+                    "\"data\": {\n" +
+                    "\"id\":" + id + ",\n" +
+                    "\"type\": \"" + type + "\",\n" +
+                    "\"value\": \"" + value + "\"\n" +
+                    "}\n" +
+                    "}\n";
+        }
     }
 
     private static class GraphEdge extends GraphItem {
@@ -84,6 +121,18 @@ public class Neo4JRepository {
             this.source = source;
             this.target = target;
             this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return "{\n" +
+                    "\"data\": {\n" +
+                    "\"id\": " + id + ",\n" +
+                    "\"source\": " + source + ",\n" +
+                    "\"target\": " + target + ",\n" +
+                    "\"value\": \"" + value + "\"\n" +
+                    "}\n" +
+                    "}\n";
         }
     }
 }
