@@ -11,8 +11,15 @@ public class RedisRepository {
         this.jedis = new Jedis("localhost");
     }
 
+    public void addSearch(String actorName) {
+        List<String> lastTenSearches = this.getLastTenSearches();
+        if(!lastTenSearches.contains(actorName)){
+            this.jedis.lpush("lastTenSearches", actorName);
+            this.jedis.ltrim("lastTenSearches", 0, 9);
+        }
+    }
+
     public List<String> getLastTenSearches() {
-        // TODO
-        return null;
+        return this.jedis.lrange("lastTenSearches", 0, -1);
     }
 }
