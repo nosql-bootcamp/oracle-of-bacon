@@ -40,6 +40,28 @@ public class Neo4JRepository {
         return res;
     }
 
+    public List<GraphItem> getSomeNodes() {
+        List<GraphItem> res = new ArrayList<>();
+
+        try (Session session = driver.session()) {
+            String query = "match p=(n:Actor)-[*]-(o:Movie)  return p limit 5"; //query testing
+            Result result = session.run(query, parameters("actorName", ""));
+            while (result.hasNext()) {
+                Record x = result.next();
+                Path p = x.get(0).asPath();
+                for (Node n : p.nodes()) {
+                    GraphNode darkVaderNode = mapNodeToGrapNode(n);
+                    res.add(darkVaderNode);
+                }
+                for (Relationship r : p.relationships()) {
+                    GraphEdge darkVaderRel = mapRelationShipToNodeEdge(r);
+                    res.add(darkVaderRel);
+                }
+            }
+        }
+        return res;
+    }
+
     public String connectionsToJson(List<GraphItem> res) {
         String json = "[";
         for (int i = 0; i < res.size(); i++) {
@@ -47,6 +69,7 @@ public class Neo4JRepository {
             json += res.get(i).toString();
         }
         json += "]";
+        Utils.print("json-neo4j", json);
         return json;
     }
 

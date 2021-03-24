@@ -27,6 +27,11 @@ public class APIEndPoint {
         return neo4JRepository.connectionsToJson(neo4JRepository.getConnections(actorName));
     }
 
+    @Get("some-nodes")
+    public String getSomeNodes(String actorName) {
+        return neo4JRepository.connectionsToJson(neo4JRepository.getSomeNodes());
+    }
+
     @Get("suggest?q=:searchQuery")
     public List<String> getActorSuggestion(String searchQuery) throws Exception {
         return elasticSearchRepository.getActorsSuggests(searchQuery);
