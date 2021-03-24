@@ -22,7 +22,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.PutMappingRequest;
-
+import org.elasticsearch.client.ResponseException;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 
 import com.serli.oracle.of.bacon.repository.ElasticSearchRepository;
@@ -30,6 +30,7 @@ import com.serli.oracle.of.bacon.repository.ElasticSearchRepository;
 public class CompletionLoader {
     private static AtomicInteger COUNT = new AtomicInteger(0);
     private static final int BULK_SIZE = 200000;
+    private static final boolean DELETE_INDEX = true;
 
     // Pre-compile regex
     private static final Pattern actorPattern = Pattern.compile("(.*), (.*)");
@@ -50,7 +51,7 @@ public class CompletionLoader {
         RestHighLevelClient client = ElasticSearchRepository.createClient();
     
         // Re-create the index
-        deleteIndex(client);
+        if (DELETE_INDEX) deleteIndex(client); // would be cleaner to find a way to pass ignore_unavailable=false
         createIndex(client);
         
         // Configure mapping
@@ -149,24 +150,26 @@ public class CompletionLoader {
     
     private static Map<String, Object> prepareJSON(String line) {
         String actorName = line.replaceAll("^\"|\"$", "");
+        String actorNameFormatted = actorName;
         List<String> suggest = new ArrayList<String>();
         suggest.add(actorName);
         
         // Extract the first and second name for the 'suggest' property
-        Matcher m = actorPattern.matcher(actorName);                    
+        Matcher m = actorPattern.matcher(actorNameFormatted);
         if (m.matches()) {
             String s1 = m.group(1).trim();
             String s2 = m.group(2).trim();
             if (s1.length() > 0) suggest.add(s1);
             if (s2.length() > 0) suggest.add(s2);
             // Add the complete name too
-            actorName = (s2 + " " + s1).trim();
-            suggest.add(actorName);
+            actorNameFormatted = (s2 + " " + s1).trim();
+            suggest.add(actorNameFormatted);
         }
         
          // Create the JSON object
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("name", actorName);
+        jsonMap.put("name_formatted", actorNameFormatted);
         jsonMap.put("suggest", suggest);
 
         return jsonMap;
