@@ -1,7 +1,9 @@
 package com.serli.oracle.of.bacon.repository;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
@@ -9,26 +11,62 @@ import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
+import org.neo4j.driver.types.Path;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Value;
+import org.neo4j.driver.Transaction;
+import org.neo4j.driver.TransactionWork;
+
+import static org.neo4j.driver.Values.parameters;
 
 public class Neo4JRepository {
     private final Driver driver;
 
     public Neo4JRepository() {
-        this.driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "password"));
+        this.driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "pandora-agent-twist-ariel-critic-7077"));
     }
 
     public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
+        List<Map<String, GraphItem>> result = session.writeTransaction(new TransactionWork<List<Map<String, GraphItem>>>() {
+            @Override
+            public List<Map<String, GraphItem>> execute(Transaction tx) {
+                Result result = tx.run("MATCH p=shortestPath(" +
+                                "(bacon:Actor {name:'Bacon, Kevin (I)'})-[*]-" +
+                                "(other:Actor {name:$actorName})" +
+                                ")" +
+                                "RETURN p",
+                        parameters("actorName", actorName));
+                Path path = result.single().get("p").asPath();
 
-        // TODO
-        return null;
+                //Final result
+                List<Map<String, GraphItem>> list = new ArrayList<Map<String, GraphItem>>();
+
+                //Get movies and actors
+                for (Node node : path.nodes()) {
+                    Map<String, GraphItem> map = new HashMap<String, GraphItem>();
+                    map.put(String.valueOf(node.id()), mapNodeToGraphNode(node));
+                    list.add(map);
+                }
+
+                //Get relationships
+                for (Relationship relation : path.relationships()) {
+                    Map<String, GraphItem> map = new HashMap<String, GraphItem>();
+                    map.put(String.valueOf(relation.id()), mapRelationShipToGraphEdge(relation));
+                    list.add(map);
+                }
+
+                return list;
+            }
+        });
+        return result;
     }
 
-    private GraphEdge mapRelationShipToNodeEdge(Relationship relationship) {
+    private GraphEdge mapRelationShipToGraphEdge(Relationship relationship) {
         return new GraphEdge(relationship.id(), relationship.startNodeId(), relationship.endNodeId(), relationship.type());
     }
 
-    private GraphNode mapNodeToGrapNode(Node node) {
+    private GraphNode mapNodeToGraphNode(Node node) {
         String type = node.labels().iterator().next();
         String value = null;
         if (!node.get("name").isNull()) {
@@ -72,6 +110,11 @@ public class Neo4JRepository {
             this.value = value;
             this.type = type;
         }
+
+        @Override
+        public String toString() {
+            return String.format("{ \"id\": \"%s\", \"value\": \"%s\", \"type\": \"%s\" }", String.valueOf(this.id), this.value, this.type);
+        }
     }
 
     private static class GraphEdge extends GraphItem {
@@ -84,6 +127,11 @@ public class Neo4JRepository {
             this.source = source;
             this.target = target;
             this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("{ \"id\": \"%s\", \"source\": \"%s\", \"target\": \"%s\", \"value\": \"%s\" }", String.valueOf(this.id), this.source, this.target, this.value);
         }
     }
 }

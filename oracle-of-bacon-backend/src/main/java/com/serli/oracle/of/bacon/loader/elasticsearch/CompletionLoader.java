@@ -28,7 +28,7 @@ public class CompletionLoader {
             bufferedReader
                     .lines()
                     .forEach(line -> {
-                            // TODO
+                        // TODO
                     });
         }
 

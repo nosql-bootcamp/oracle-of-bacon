@@ -1,3 +1,5 @@
+Audrey DENOUAL & Venceslas ROULLIER
+
 # Oracle of Bacon
 This application is an Oracle of Bacon implementation based on NoSQL data stores :
 * ElasticSearch (http) - localhost:9200
