@@ -24,7 +24,7 @@ public class APIEndPoint {
     @Get("bacon-to?actor=:actorName")
     // TODO change return type
     public String getConnectionsToKevinBacon(String actorName) {
-
+        this.neo4JRepository.getConnectionsToKevinBacon(actorName);
         return "[\n" +
                 "{\n" +
                 "\"data\": {\n" +
