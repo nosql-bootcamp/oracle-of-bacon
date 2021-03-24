@@ -24,14 +24,10 @@ public class Neo4JRepository {
         Transaction transaction = session.beginTransaction();
         String baconName = "Bacon, Kevin (I)";
 
-        StatementResult result = transaction.run(
-                "MATCH " +
-                        "(bc:Actors {name: {baconName}}), (ran:Actors {name: {relatedActorName}})," +
-                        "p = shortestPath((bc)-[:PLAYED_IN*]-(ran)) " +
-                        "WITH p WHERE length(p) > 1 " +
-                        "RETURN p",
-                parameters("baconName", baconName, "relatedActorName", actorName)
-        );
+        Transaction transaction = session.beginTransaction();
+        StatementResult result = transaction.run("MATCH (source:Actors{name:'" + KEVIN_BACON + "'}), (destination:Actors{name:'" + actorName + "'}), "
+                + "path = shortestPath((source)-[:PLAYED_IN*]-(destination))"
+                + "RETURN path");
 
         List<Path> paths = result
                 .list()
