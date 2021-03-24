@@ -25,14 +25,10 @@ public class APIEndPoint {
     @Get("bacon-to?actor=:actorName")
     //  change return type
     public String getConnectionsToKevinBacon(String actorName) {
-        System.out.println("-----\nappel getConnectionsToKevinBacon...");
+        redisRepository.saveSearch(actorName);
     	List<Neo4JRepository.GraphItem> elementsGraphe = neo4JRepository.getConnectionsToKevinBacon(actorName);
     	String elements = elementsGraphe.stream().map(element -> element.toString()).collect(Collectors.joining(", "));
 
-    	System.out.println("Retourne le resultat :");
-    	System.out.println(elements);
-
-    	System.out.println("-----");
     	return "[" + elements + "]";
 
   
@@ -40,11 +36,7 @@ public class APIEndPoint {
 
     @Get("suggest?q=:searchQuery")
     public List<String> getActorSuggestion(String searchQuery) throws IOException {
-        return Arrays.asList("Niro, Chel",
-                "Senanayake, Niro",
-                "Niro, Juan Carlos",
-                "de la Rua, Niro",
-                "Niro, Simão");
+        return elasticSearchRepository.getActorsSuggests(searchQuery);
     }
 
     @Get("last-searches")
