@@ -1,6 +1,7 @@
 package com.serli.oracle.of.bacon.repository;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.neo4j.driver.AuthTokens;
@@ -9,6 +10,8 @@ import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Transaction;
 
 public class Neo4JRepository {
     private final Driver driver;
@@ -19,10 +22,20 @@ public class Neo4JRepository {
 
     public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
-
-        // TODO
-        return null;
+        List<Map<String, GraphItem>> connections = new ArrayList<Map<String, GraphItem>>();
+        // MATCH ({name:actorName})-[:PLAYED_IN*1]->(m) WHERE ({name:"Bacon, Kevin (I)"})-[:PLAYED_IN*1]->(m) RETURN m
+        String request = "MATCH p=shortestPath(({ name: \"Bacon, Kevin (I)\" })-[:PLAYED_IN*]-({ name:"+actorName +" }))\n RETURN p";
+        Result result = session.run(request);
+        while ( result.hasNext()) {
+            Map<String, GraphItem> item = new HashMap<String, GraphItem>();
+            item.put( result.get( 0 ).asString() , (GraphItem) (result.get( 0 )));
+            result.next();
+            System.out.println(result);
+            //connections.add(item);
+        }
+        return connections;
     }
+
 
     private GraphEdge mapRelationShipToNodeEdge(Relationship relationship) {
         return new GraphEdge(relationship.id(), relationship.startNodeId(), relationship.endNodeId(), relationship.type());

@@ -24,6 +24,7 @@ public class APIEndPoint {
     @Get("bacon-to?actor=:actorName")
     // TODO change return type
     public String getConnectionsToKevinBacon(String actorName) {
+
         return "[\n" +
                 "{\n" +
                 "\"data\": {\n" +
@@ -63,6 +64,7 @@ public class APIEndPoint {
                 "}\n" +
                 "}\n" +
                 "]";
+
     }
 
     @Get("suggest?q=:searchQuery")
