@@ -25,7 +25,8 @@ public class ElasticSearchRepository {
     }
 
     public List<String> getActorsSuggests(String searchQuery) throws IOException {
-        // TODO
+        //suggests = getConnectionsToKevinBacon(searchQuery);
+
         return null;
     }
 }
