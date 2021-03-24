@@ -9,6 +9,8 @@ import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
+import org.neo4j.driver.Transaction;
+import org.neo4j.driver.TransactionWork;
 
 public class Neo4JRepository {
     private final Driver driver;
@@ -19,8 +21,16 @@ public class Neo4JRepository {
 
     public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
-
-        // TODO
+        List<Map<String, GraphItem>> result = session.writeTransaction(new TransactionWork<List<Map<String, GraphItem>>>() {
+            @Override
+            public String execute(Transaction tx) {
+                Result result = tx.run( "MATCH path = (bacon)-[:PLAYED_IN*]-()-[:PLAYED_IN*]-(actor)" +
+                                         "WHERE bacon.id = 'Bacon, Kevin (I)' AND  actor.id = $actor" +
+                                         "RETURN path",
+                    parameters( "actor", actorName ) );
+                    // TODO
+            }
+        });
         return null;
     }
 
