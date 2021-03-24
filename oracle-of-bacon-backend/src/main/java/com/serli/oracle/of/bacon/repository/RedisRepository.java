@@ -13,6 +13,8 @@ public class RedisRepository {
 
     public List<String> getLastTenSearches() {
         // TODO
+        // J'imagine qu'il faut trouver le bon truc genre oracleOfBacon:lastsearches dans le get
+        this.jedis.get("");
         return null;
     }
 }

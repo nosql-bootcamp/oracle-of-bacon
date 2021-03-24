@@ -2,8 +2,10 @@ const csv = require("csv-parser");
 const fs = require("fs");
 const { Client } = require("@elastic/elasticsearch");
 
+// /!\ il faut mettre le dossier imbd-data dans le dossier racine du projet
+
 const client = new Client({ node: "http://localhost:9200" });
-const INDEX_NAME = 'oracleOfBacon';
+const INDEX_NAME = 'actor';
 
 async function insert() {
 
@@ -74,7 +76,7 @@ function createBulkInsertQuery(names) {
         parts.forEach((part) => suggest.push(part.trim()));
         parts.reverse().forEach((part) => suggest.push(part.trim()));
 
-        acc.push({ index: { _index: "actor", _type: "_doc" } });
+        acc.push({ index: { _index: INDEX_NAME, _type: "_doc" } });
         acc.push({ name, suggest });
         return acc;
     }, []);
