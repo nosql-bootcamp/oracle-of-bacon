@@ -13,8 +13,9 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.search.suggest.SuggestBuilder;
-import org.elasticsearch.search.suggest.term.TermSuggestionBuilder;
+// import org.elasticsearch.index.query.QueryStringQueryBuilder;
+// import org.elasticsearch.search.suggest.SuggestBuilder;
+// import org.elasticsearch.search.suggest.term.TermSuggestionBuilder;
 import org.elasticsearch.search.SearchHit;
 
 public class ElasticSearchRepository {
@@ -35,10 +36,13 @@ public class ElasticSearchRepository {
     }
 
     public List<String> getActorsSuggests(String searchQuery) throws IOException {
-        MatchQueryBuilder queryBuilder = new MatchQueryBuilder("name", searchQuery);
-        SuggestBuilder suggestBuilder = new SuggestBuilder();
-        TermSuggestionBuilder suggestionBuilder = new TermSuggestionBuilder("name");
+        MatchQueryBuilder queryBuilder = new MatchQueryBuilder("suggest", searchQuery);
+        // Not working as intended
+        // QueryStringQueryBuilder queryBuilder = new QueryStringQueryBuilder(String.format("*%s*", searchQuery));
+        // queryBuilder = queryBuilder.defaultField("suggest");
         /*
+        SuggestBuilder suggestBuilder = new SuggestBuilder();
+        TermSuggestionBuilder suggestionBuilder = new TermSuggestionBuilder("suggest");
         suggestionBuilder = suggestionBuilder.text(searchQuery);
         suggestBuilder = suggestBuilder.addSuggestion("suggestion", suggestionBuilder);
         */
