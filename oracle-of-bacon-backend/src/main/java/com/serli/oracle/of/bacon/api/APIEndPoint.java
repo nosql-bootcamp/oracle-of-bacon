@@ -3,6 +3,8 @@ package com.serli.oracle.of.bacon.api;
 import com.serli.oracle.of.bacon.repository.ElasticSearchRepository;
 import com.serli.oracle.of.bacon.repository.Neo4JRepository;
 import com.serli.oracle.of.bacon.repository.RedisRepository;
+import com.serli.oracle.of.bacon.repository.Neo4JRepository.GraphItem;
+
 import net.codestory.http.annotations.Get;
 
 import java.io.IOException;
@@ -23,8 +25,9 @@ public class APIEndPoint {
 
     @Get("bacon-to?actor=:actorName")
     // TODO change return type
-    public String getConnectionsToKevinBacon(String actorName) {
-        return "[\n" +
+    public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
+        return this.neo4JRepository.getConnectionsToKevinBacon(actorName);
+        /*return "[\n" +
                 "{\n" +
                 "\"data\": {\n" +
                 "\"id\": 85449,\n" +
@@ -46,23 +49,16 @@ public class APIEndPoint {
                 "\"value\": \"Robbins, Tim (I)\"\n" +
                 "}\n" +
                 "},\n" +
-                "{\n" +
+
                 "\"data\": {\n" +
                 "\"id\": 579848,\n" +
-                "\"source\": 85449,\n" +
-                "\"target\": 2278636,\n" +
-                "\"value\": \"PLAYED_IN\"\n" +
-                "}\n" +
-                "},\n" +
+                "\"source\": 85449,\n" + "\"target\": 227863 "\"value\": \"PLAYED "}\n" + "},\n" +
                 "{\n" +
                 "\"data\": {\n" +
                 "\"id\": 9985692,\n" +
                 "\"source\": 1394181,\n" +
-                "\"target\": 2278636,\n" +
-                "\"value\": \"PLAYED_IN\"\n" +
-                "}\n" +
-                "}\n" +
-                "]";
+                "\"target\": 2278636,\n" + "\"value\": \"PLAYE "}\n" + "}\n" +
+                "]";*/
     }
 
     @Get("suggest?q=:searchQuery")
