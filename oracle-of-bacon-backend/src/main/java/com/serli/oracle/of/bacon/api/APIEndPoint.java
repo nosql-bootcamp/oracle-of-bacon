@@ -25,11 +25,12 @@ public class APIEndPoint {
     @Get("bacon-to?actor=:actorName")
     public String getConnectionsToKevinBacon(String actorName) {
         List<Map<String, GraphItem>> graph = neo4JRepository.getConnectionsToKevinBacon(actorName);
-        return Arrays.toString(
-                graph.stream()
-                        .map(map -> String.format("{\"data\": %s}", map.entrySet().iterator().next()
+        String result = Arrays.toString(
+                    graph.stream()
+                         .map(map -> String.format("{\"data\": %s}", map.entrySet().iterator().next()
                                 .getValue().toString()))
-                        .toArray());
+                         .toArray());
+        return result;
     }
 
     @Get("suggest?q=:searchQuery")

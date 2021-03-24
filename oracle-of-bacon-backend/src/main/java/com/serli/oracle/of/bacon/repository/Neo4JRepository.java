@@ -38,17 +38,24 @@ public class Neo4JRepository {
                                 "RETURN p",
                         parameters("actorName", actorName));
                 Path path = result.single().get("p").asPath();
+
+                //Final result
                 List<Map<String, GraphItem>> list = new ArrayList<Map<String, GraphItem>>();
+
+                //Get movies and actors
                 for (Node node : path.nodes()) {
                     Map<String, GraphItem> map = new HashMap<String, GraphItem>();
                     map.put(String.valueOf(node.id()), mapNodeToGraphNode(node));
                     list.add(map);
                 }
+
+                //Get relationships
                 for (Relationship relation : path.relationships()) {
                     Map<String, GraphItem> map = new HashMap<String, GraphItem>();
                     map.put(String.valueOf(relation.id()), mapRelationShipToGraphEdge(relation));
                     list.add(map);
                 }
+
                 return list;
             }
         });
