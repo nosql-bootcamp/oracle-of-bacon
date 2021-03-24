@@ -28,7 +28,15 @@ public class Neo4JRepository {
         this.driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "motdepasse"));
     }
 
-    public List<GraphItem> getConnectionsToKevinBacon(String actorName)  {
+	private String getQuery() {
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append("MATCH p = shortestPath((Kevin:Actor {name: \"Bacon, Kevin (I)\"})-[:PLAYED_IN*]-(Other:Actor {name: {nomAutreActeur}})) ")
+				  .append("RETURN p")
+		;
+		return strBuilder.toString();
+	}
+
+	public List<GraphItem> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
           // Implémentation de l'oracle de Bacon
           List<GraphItem> graphe = new LinkedList<>();
@@ -41,15 +49,13 @@ public class Neo4JRepository {
   
           while (resultats.hasNext()) {
               Record entree = resultats.next();
-              System.out.println(entree);
               List<Value> valeurs = entree.values();
   
-              // normalement il n'y a qu'un path par Record
+              
               for (Value valeur : valeurs) {
                   Path chemin = valeur.asPath();
   
                   chemin.nodes().forEach(node -> {
-                      //             |)4r|<  |\/|4g1(
                       String type = node.labels().iterator().next();
   
                       String clePropriete = "Actor".equals(type) ? "name" : "title";
@@ -65,14 +71,6 @@ public class Neo4JRepository {
           return graphe;
       }
   
-      private String getQuery() {
-          StringBuilder strBuilder = new StringBuilder();
-          strBuilder.append("MATCH p = shortestPath((Kevin:Actor {name: \"Bacon, Kevin (I)\"})-[:PLAYED_IN*]-(Other:Actor {name: {nomAutreActeur}})) ")
-                    .append("RETURN p")
-          ;
-          return strBuilder.toString();
-
-    }
 
     private GraphEdge mapRelationShipToNodeEdge(Relationship relationship) {
         return new GraphEdge(relationship.id(), relationship.startNodeId(), relationship.endNodeId(), relationship.type());

@@ -51,28 +51,34 @@ public class CompletionLoader {
                         // Ajout de elasticsearch 
                         if(count.get() == 0) {
                             count.getAndIncrement();
+                        return;
                         } 
-                        else {
-                        	String[] input = line.split(",");
-                        	String suggestionArray = "[";
-                        	suggestionArray += "\"" + line.replace("\"", "") + "\"";
+                        String[] input = line.split(",");
+                    	StringBuilder suggestionArray = new StringBuilder("[");
+                    	suggestionArray.append("\"")
+                    	               .append(line.replace("\"", ""))
+                    	               .append("\"");
 
-                        	if (input.length == 2) {
-                        		suggestionArray += ", \"" + input[1].replace("\"", "") + ", " + input[0].replace("\"", "") + "\"";
-                        	}
+                    	if (input.length == 2) {
+                    		suggestionArray.append(", \"")
+                    		               .append(input[1].replace("\"", ""))
+                    		               .append(", ")
+                    		               .append(input[0].replace("\"", ""))
+                    		               .append("\"");
+                    	}
 
-                        	suggestionArray += "]";
+                    	suggestionArray.append("]");
 
-                            String jsonString = "{ \"name_suggest\": {\"input\": " + suggestionArray + " }, \"name\": \""+ line.replace("\"", "") + "\"}";
-                            request.add(
-                                new IndexRequest("actors")
-                                    .id(Integer.toString(count.getAndIncrement()))
-                                    .type("_doc")
-                                    .source(jsonString, XContentType.JSON)
-                            );
-                            if(count.get() % BULK_SIZE == 0) {
-                                doRequest();
-                            }
+
+                        String jsonString = "{ \"name_suggest\": {\"input\": " + suggestionArray.toString() + " }, \"name\": \""+ line.replace("\"", "") + "\"}";
+                        request.add(
+                            new IndexRequest("actors")
+                                .id(Integer.toString(count.getAndIncrement()))
+                                .type("_doc")
+                                .source(jsonString, XContentType.JSON)
+                        );
+                        if(count.get() % BULK_SIZE == 0) {
+                            doRequest();
                         }
                     });
         }
