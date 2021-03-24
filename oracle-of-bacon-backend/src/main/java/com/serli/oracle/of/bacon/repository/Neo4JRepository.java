@@ -9,19 +9,69 @@ import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
+import org.neo4j.driver.internal.value.PathValue;
+import org.neo4j.driver.v1.Record;
+import org.neo4j.driver.v1.StatementResult;
+import org.neo4j.driver.v1.Transaction;
+import org.neo4j.driver.v1.Value;
+import org.neo4j.driver.v1.types.Node;
+import org.neo4j.driver.v1.types.Path;
+import org.neo4j.driver.v1.types.Relationship;
+import static org.neo4j.driver.v1.Values.parameters;
+
+import java.util.LinkedList;
 
 public class Neo4JRepository {
     private final Driver driver;
 
     public Neo4JRepository() {
-        this.driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "password"));
+        this.driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "motdepasse"));
     }
 
-    public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
+    public List<GraphItem> getConnectionsToKevinBacon(String actorName)  {
         Session session = driver.session();
+          // Implémentation de l'oracle de Bacon
+          List<GraphItem> graphe = new LinkedList<>();
+          StatementResult resultats = null;
+          try (Transaction transaction = session.beginTransaction())
+          {
+              resultats = transaction.run(getQuery(), parameters("nomAutreActeur", actorName));
+              transaction.success();
+          }
+  
+          while (resultats.hasNext()) {
+              Record entree = resultats.next();
+              System.out.println(entree);
+              List<Value> valeurs = entree.values();
+  
+              // normalement il n'y a qu'un path par Record
+              for (Value valeur : valeurs) {
+                  Path chemin = valeur.asPath();
+  
+                  chemin.nodes().forEach(node -> {
+                      //             |)4r|<  |\/|4g1(
+                      String type = node.labels().iterator().next();
+  
+                      String clePropriete = "Actor".equals(type) ? "name" : "title";
+                      graphe.add(new GraphNode(node.id(), node.get(clePropriete).asString(), type));
+                  });
+  
+                  chemin.relationships().forEach(relationship -> {
+                      graphe.add(new GraphEdge(relationship.id(), relationship.startNodeId(), relationship.endNodeId(), relationship.type()));
+                  });
+              }
+          }
+  
+          return graphe;
+      }
+  
+      private String getQuery() {
+          StringBuilder strBuilder = new StringBuilder();
+          strBuilder.append("MATCH p = shortestPath((Kevin:Actor {name: \"Bacon, Kevin (I)\"})-[:PLAYED_IN*]-(Other:Actor {name: {nomAutreActeur}})) ")
+                    .append("RETURN p")
+          ;
+          return strBuilder.toString();
 
-        // TODO
-        return null;
     }
 
     private GraphEdge mapRelationShipToNodeEdge(Relationship relationship) {
@@ -84,6 +134,18 @@ public class Neo4JRepository {
             this.source = source;
             this.target = target;
             this.value = value;
+        }
+        @Override
+        public String toString() {
+        	StringBuilder strBuilder = new StringBuilder();
+        	strBuilder.append("{ \"data\" : { ")
+        			  .append("	    \"id\": "     ).append(this.id    ).append(", "  )
+        			  .append("     \"source\": " ).append(this.source).append(", "  )
+        			  .append("     \"target\": " ).append(this.target).append(", "  )
+        			  .append("     \"value\": \"").append(this.value ).append("\"")
+        			  .append("}}")
+        	;
+        	return strBuilder.toString();
         }
     }
 }
