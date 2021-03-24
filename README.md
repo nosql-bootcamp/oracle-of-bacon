@@ -41,7 +41,7 @@ cd oracle-of-bacon-backend
 ./gradlew run
 ```
 
-Rendez-vous sur a page http://localhost:8080.
+Rendez-vous sur a page http://localhost:3000.
 
 Pour la suite du projet, nous vous conseillons d'importer le backend dans votre IDE/éditeur préféré. Sauf désir de créativité :smiley:, vous n'avez rien à faire dans le front-end.
 
