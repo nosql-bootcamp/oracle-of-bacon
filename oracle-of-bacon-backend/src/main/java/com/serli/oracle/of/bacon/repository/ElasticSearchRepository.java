@@ -16,8 +16,11 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.term.TermSuggestion;
 
 public class ElasticSearchRepository {
-
-    private final RestHighLevelClient client;
+    private static final String FIELD_NAME = "name";
+	private static final String ACTORS_COMPLETION = "actors_completion";
+    private static final String SUGGESTION_FIELD = "name_suggest";
+    private static final String INDEX = "actors";
+	private final RestHighLevelClient client;
 
     public ElasticSearchRepository() {
         client = createClient();
@@ -33,27 +36,28 @@ public class ElasticSearchRepository {
     }
 
     public List<String> getActorsSuggests(String searchQuery) throws IOException {
-        SearchRequest searchRequest = new SearchRequest("actors");
+
+    	SearchRequest searchRequest = new SearchRequest(INDEX);
 
     	SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 		SuggestionBuilder completionSuggestionBuilder =
-    	    SuggestBuilders.completionSuggestion("name_suggest").text(searchQuery).size(10); 
+        SuggestBuilders.completionSuggestion(SUGGESTION_FIELD).text(searchQuery).size(10); 
     	SuggestBuilder suggestBuilder = new SuggestBuilder();
-    	suggestBuilder.addSuggestion("actors_completion", completionSuggestionBuilder); 
+    	suggestBuilder.addSuggestion(ACTORS_COMPLETION, completionSuggestionBuilder); 
     	searchSourceBuilder.suggest(suggestBuilder);
 
     	searchRequest.source(searchSourceBuilder);
 
     	SearchResponse searchResponse = client.search(searchRequest);
 
-    	// retrieving suggestion
+    	// Récupération des suggestions
     	Suggest suggest = searchResponse.getSuggest();
-    	CompletionSuggestion completionSuggestion = suggest.getSuggestion("actors_completion");
+    	CompletionSuggestion completionSuggestion = suggest.getSuggestion(ACTORS_COMPLETION);
 
     	List<String> suggestions = new LinkedList<>();
     	for (CompletionSuggestion.Entry entry : completionSuggestion.getEntries()) {
     	    for (CompletionSuggestion.Entry.Option option : entry) {
-    	        suggestions.add((String) option.getHit().getSourceAsMap().get("name"));
+    	        suggestions.add((String) option.getHit().getSourceAsMap().get(FIELD_NAME));
     	    }
     	}
 
