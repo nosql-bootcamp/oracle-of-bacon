@@ -20,7 +20,10 @@ public class Neo4JRepository {
     public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
 
-        // TODO
+        // la requête cypher :
+        String request = "MATCH (KevinB:Actor {name: \"Bacon, Kevin (I)\"} ), (a:Actor {name: " + actorName + "}), p = shortestPath((KevinB)-[:PLAYED_IN*]-(Al)) RETURN p";
+        // TODO : reste à lancer la requete depuis java et de formater le résultat...
+
         return null;
     }
 
