@@ -24,6 +24,8 @@ public class APIEndPoint {
     @Get("bacon-to?actor=:actorName")
     // TODO change return type
     public String getConnectionsToKevinBacon(String actorName) {
+        this.redisRepository.saveSearch(actorName);
+        this.neo4JRepository.getConnectionsToKevinBacon(actorName);
         return "[\n" +
                 "{\n" +
                 "\"data\": {\n" +
@@ -63,23 +65,16 @@ public class APIEndPoint {
                 "}\n" +
                 "}\n" +
                 "]";
+
     }
 
     @Get("suggest?q=:searchQuery")
     public List<String> getActorSuggestion(String searchQuery) throws IOException {
-        return Arrays.asList("Niro, Chel",
-                "Senanayake, Niro",
-                "Niro, Juan Carlos",
-                "de la Rua, Niro",
-                "Niro, Simão");
+        return this.elasticSearchRepository.getActorsSuggests(searchQuery);
     }
 
     @Get("last-searches")
     public List<String> last10Searches() {
-        return Arrays.asList("Peckinpah, Sam",
-                "Robbins, Tim (I)",
-                "Freeman, Morgan (I)",
-                "De Niro, Robert",
-                "Pacino, Al (I)");
+        return this.redisRepository.getLastTenSearches();
     }
 }

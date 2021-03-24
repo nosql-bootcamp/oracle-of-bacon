@@ -1,7 +1,9 @@
 package com.serli.oracle.of.bacon.repository;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
@@ -9,6 +11,9 @@ import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Transaction;
 
 public class Neo4JRepository {
     private final Driver driver;
@@ -19,10 +24,23 @@ public class Neo4JRepository {
 
     public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
+        List<Map<String, GraphItem>> connections = new ArrayList<Map<String, GraphItem>>();
 
-        // TODO
-        return null;
+        String request = "MATCH p=shortestPath(({ name: \"Bacon, Kevin (I)\" })-[:PLAYED_IN*]-({ name:\"" + actorName +"\" }))\n RETURN p";
+        Result result = session.run(request);
+
+        while (result.hasNext()) {
+            Record rec = result.next();
+
+            // TODO La "seule" chose qui reste à faire est de réussir à naviguer l'arbre de résultats
+            // et à le transformer selon le format attendu (cf APIEndpoint.java)
+            // (nous n'avons pas réussi à finir cette partie dans les temps)
+
+            Map<String, GraphItem> item = new HashMap<String, GraphItem>();
+        }
+        return connections;
     }
+
 
     private GraphEdge mapRelationShipToNodeEdge(Relationship relationship) {
         return new GraphEdge(relationship.id(), relationship.startNodeId(), relationship.endNodeId(), relationship.type());
