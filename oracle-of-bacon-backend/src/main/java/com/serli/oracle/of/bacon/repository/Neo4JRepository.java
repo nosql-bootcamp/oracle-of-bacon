@@ -25,17 +25,18 @@ public class Neo4JRepository {
     public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
         List<Map<String, GraphItem>> connections = new ArrayList<Map<String, GraphItem>>();
-        // MATCH ({name:actorName})-[:PLAYED_IN*1]->(m) WHERE ({name:"Bacon, Kevin (I)"})-[:PLAYED_IN*1]->(m) RETURN m
-        String request = "MATCH p=shortestPath(({ name: \"Bacon, Kevin (I)\" })-[:PLAYED_IN*]-({ name:" + actorName +" }))\n RETURN p";
+
+        String request = "MATCH p=shortestPath(({ name: \"Bacon, Kevin (I)\" })-[:PLAYED_IN*]-({ name:\"" + actorName +"\" }))\n RETURN p";
         Result result = session.run(request);
+
         while (result.hasNext()) {
             Record rec = result.next();
 
+            // TODO La "seule" chose qui reste à faire est de réussir à naviguer l'arbre de résultats
+            // et à le transformer selon le format attendu (cf APIEndpoint.java)
+            // (nous n'avons pas réussi à finir cette partie dans les temps)
+
             Map<String, GraphItem> item = new HashMap<String, GraphItem>();
-            //item.put(result.get(0).asString() , (GraphItem) (result.get(0)));
-            //result.next();
-            System.out.println(rec.toString());
-            //connections.add(item);
         }
         return connections;
     }
