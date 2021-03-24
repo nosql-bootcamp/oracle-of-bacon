@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.serli.oracle.of.bacon.utils.Utils;
 import org.neo4j.driver.*;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Path;
@@ -22,6 +23,7 @@ public class Neo4JRepository {
         List<GraphItem> res = new ArrayList<>();
 
         try (Session session = driver.session()) {
+
             String query = "match p=(n:Actor)-[*]-(o:Movie) where  n.name=$actorName return p";
             Result result = session.run(query, parameters("actorName", actorName));
             while (result.hasNext()) {
@@ -157,5 +159,11 @@ public class Neo4JRepository {
                     "}\n" +
                     "}\n";
         }
+    }
+
+    public static void main(String args[]){
+        Neo4JRepository neo = new Neo4JRepository();
+        neo.connectionsToJson(neo.getConnections("Abadie, William"));
+        neo.connectionsToJson(neo.getSomeNodes());
     }
 }

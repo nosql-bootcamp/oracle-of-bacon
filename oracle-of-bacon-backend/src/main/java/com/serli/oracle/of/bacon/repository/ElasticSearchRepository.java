@@ -2,6 +2,8 @@ package com.serli.oracle.of.bacon.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.serli.oracle.of.bacon.utils.Utils;
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
@@ -57,8 +59,18 @@ public class ElasticSearchRepository {
             return ans;
         }
         for (SearchHit hit : response.getHits().getHits()) {
+            Utils.print("suggestion-elastic: ", hit.getSourceAsString());
             ans.add(hit.getSourceAsString());
         }
         return ans;
+    }
+
+    public static void main(String args[]){
+        ElasticSearchRepository es = new ElasticSearchRepository();
+        try {
+            es.getActorsSuggests("maria");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
