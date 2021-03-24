@@ -10,18 +10,20 @@ import org.neo4j.driver.Session;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
 
+
 public class Neo4JRepository {
     private final Driver driver;
 
     public Neo4JRepository() {
-        this.driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "password"));
+        this.driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "neo4j!"));
     }
 
+   
     public List<Map<String, GraphItem>> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
-
-        // TODO
-        return null;
+        List<Map<String, GraphItem>> graphe = new LinkedList<>();
+        
+        return graphe;
     }
 
     private GraphEdge mapRelationShipToNodeEdge(Relationship relationship) {
