@@ -5,7 +5,7 @@ const { Client } = require("@elastic/elasticsearch");
 const client = new Client({ node: "http://localhost:9200" });
 
 async function insert() {
-  client.indices.create({ index: 'actor' }, (err, resp) => {
+  client.indices.create({ index: 'name' }, (err, resp) => {
     if (err) console.trace(err.message);
   });
 
