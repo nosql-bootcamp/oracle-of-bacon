@@ -3,12 +3,13 @@
     <div class="form-container">
       <input
         placeHolder="Type Actor Name Here"
-        class="actor-name"
+        class="form-control actor-name"
         v-model="searchInput"
         @keypress.enter="search(searchInput)"
         @keyup="suggest(searchInput)"
       />
-      <button class="search-button" @click="search(searchInput)">Search</button>
+      <button class="btn btn-success" @click="search(searchInput)">Search</button>
+      <button class="btn btn-success" @click="getsome(searchInput)">Get some</button>
       <div v-show="searchInput" class="suggest">
         <div
           v-for="suggest in suggests"
@@ -39,6 +40,10 @@ export default defineComponent({
       console.log("searching", toSearch);
       this.$emit("search", toSearch);
       this.searchInput = "";
+    },
+    getsome(toSearch: string) {
+      console.log("getting", toSearch);
+      this.$emit("getsome", toSearch);
     },
     suggest(toSuggest: string) {
       fetch(`/api/suggest?q=${toSuggest}`)

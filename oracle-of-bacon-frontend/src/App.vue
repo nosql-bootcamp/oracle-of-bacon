@@ -3,8 +3,8 @@
     <div class="menu">
       <h1>Oracle Of Bacon</h1>
     </div>
-    <actor-search id="actor-search" v-on:search="consultOracle"></actor-search>
-    <search-result id="result" :actor-name="actorName"></search-result>
+    <actor-search id="actor-search" v-on:search="consultOracle" v-on:getsome="getOracle"  ></actor-search>
+    <search-result id="result" :actor-name="actorName" :get-some="getSome"></search-result>
     <last-10-searches id="last-10-searches" class="box"></last-10-searches>
   </div>
 </template>
@@ -20,6 +20,7 @@ export default defineComponent({
   data() {
     return {
       actorName: "",
+      getSome:"",
     };
   },
   components: {
@@ -30,6 +31,9 @@ export default defineComponent({
   methods: {
     consultOracle(actorName: string) {
       this.actorName = actorName;
+    },
+    getOracle(actorName: string) {
+      this.getSome = this.getSome + 'a';
     },
   },
 });
@@ -66,7 +70,7 @@ h1 {
 }
 
 .menu {
-  background-color: #5a847e;
+  background-color: #317347;
   color: #fbffc3;
   position: absolute;
   width: 100%;

@@ -22,9 +22,9 @@ const drawChart = (
       .style({
         "background-color": (node: any) => {
           if (node.data("type") === "Movie") {
-            return "#617d57";
+            return "#2196f3";
           } else if (node.data("type") === "Actor") {
-            return "#30514c";
+            return "#00be76";
           }
           return "black";
         },
@@ -50,14 +50,14 @@ const drawChart = (
         "text-halign": "center",
         "text-outline-color": (node: any) => {
           if (node.data("type") === "Movie") {
-            return "#617d57";
+            return "#2196f3";
           } else if (node.data("type") === "Actor") {
-            return "#30514c";
+            return "#00be76";
           }
           return "black";
         },
         "text-outline-width": 10,
-        color: "white",
+        color: "black",
         "text-wrap": "wrap",
         label: "data(value)",
       })
@@ -75,6 +75,7 @@ export default defineComponent({
   name: "search-result",
   props: {
     actorName: String,
+    getSome: String,
   },
   watch: {
     actorName(newName) {
@@ -82,6 +83,19 @@ export default defineComponent({
       if (newName) {
         (this.$refs.cytos as HTMLDivElement).style.visibility = "visible";
         fetch(`/api/bacon-to?actor=${newName}`)
+          .then((response) => response.json())
+          .then((bodyJson) => {
+            drawChart(this.$refs.cytos as HTMLDivElement, bodyJson, newName);
+          });
+      } else {
+        (this.$refs.cytos as HTMLDivElement).style.visibility = "hidden";
+      }
+    },
+    getSome(newName) {
+      console.log("get some", newName);
+      if (newName) {
+        (this.$refs.cytos as HTMLDivElement).style.visibility = "visible";
+        fetch(`/api/some-nodes`)
           .then((response) => response.json())
           .then((bodyJson) => {
             drawChart(this.$refs.cytos as HTMLDivElement, bodyJson, newName);
