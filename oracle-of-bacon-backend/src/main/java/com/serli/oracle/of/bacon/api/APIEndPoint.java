@@ -28,12 +28,8 @@ public class APIEndPoint {
     }
 
     @Get("suggest?q=:searchQuery")
-    public List<String> getActorSuggestion(String searchQuery) throws IOException {
-        return Arrays.asList("Niro, Chel",
-                "Senanayake, Niro",
-                "Niro, Juan Carlos",
-                "de la Rua, Niro",
-                "Niro, Simão");
+    public List<String> getActorSuggestion(String searchQuery) throws Exception {
+        return elasticSearchRepository.getActorsSuggests(searchQuery);
     }
 
     @Get("last-searches")
