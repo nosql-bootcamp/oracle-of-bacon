@@ -3,4 +3,5 @@
 oracle-of-bacon-backend/.data/
 node_modules
 imdb-data
-
+*.swp
+*.class
